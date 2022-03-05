@@ -2,3 +2,5 @@ numpy
 pyspark
 pandas
 matplotlib
+fastdtw
+scipy

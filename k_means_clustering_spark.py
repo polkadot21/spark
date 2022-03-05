@@ -4,6 +4,7 @@ from pyspark.ml.feature import StandardScaler
 from pyspark.ml.clustering import KMeans
 from pyspark.ml.evaluation import ClusteringEvaluator
 import matplotlib.pyplot as plt
+from dtw_udf import get_dtw_distance
 
 
 def create_dataFrame(name, path) -> 'dataFrame':
