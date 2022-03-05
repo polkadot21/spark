@@ -5,6 +5,22 @@ from pyspark.ml.clustering import KMeans
 from pyspark.ml.evaluation import ClusteringEvaluator
 import matplotlib.pyplot as plt
 
+
+def create_dataFrame(name, path) -> 'dataFrame':
+
+    # define spark session
+    spark_dataFrame = (SparkSession
+             .builder
+             .appName(name)
+             .getOrCreate())\
+        .read\
+        .format("CSV")\
+        .option("header", "true")\
+        .option("inferSchema", "true")\
+        .load(path)\
+        .na.drop()  # drop NaN values
+    return spark_dataFrame
+
 def scale_data(dataset):
     scale=StandardScaler(inputCol='features',outputCol='standardized')
     scaled_dataset=scale.fit(dataset)
@@ -40,21 +56,9 @@ def plot_metric_for_different_k(silhouette_score):
 
 if __name__ == '__main__':
     path = "data/credit_cards.csv"  # credit card dataset
+    name = 'Credit card clustering'
 
-    # define spark session
-    spark = (SparkSession
-             .builder
-             .appName("Clustering using K-Means")
-             .getOrCreate())
-
-    # load dataset
-    data_customer = (spark.read
-                     .format("CSV")
-                     .option("header", "true")
-                     .option("inferSchema", "true")
-                     .load(path)
-                     .na.drop()) #drop NaN values
-
+    data_customer = create_dataFrame(name, path)
     # vectorize data
     columns = data_customer.columns[1:]
     assemble = VectorAssembler(inputCols = columns,
